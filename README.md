@@ -1,11 +1,11 @@
-# prisma-to-zod
+# zod-prisma-gen
 
 A simple Prisma generator that creates Zod validation schemas. No bloat, no paid tiers.
 
 ## Installation
 
 ```bash
-npm install prisma-to-zod zod
+npm install zod-prisma-gen zod
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ Add the generator to your `schema.prisma`:
 
 ```prisma
 generator zod {
-  provider = "prisma-to-zod"
+  provider = "zod-prisma-gen"
   output   = "./generated/zod"
 }
 ```
@@ -48,7 +48,7 @@ const user = UserSchema.parse({
 
 ```prisma
 generator zod {
-  provider      = "prisma-to-zod"
+  provider      = "zod-prisma-gen"
   output        = "./generated/zod"
   multipleFiles = "true"
   coerceDate    = "false"

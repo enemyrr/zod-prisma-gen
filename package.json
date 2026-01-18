@@ -1,22 +1,28 @@
 {
-  "name": "prisma-to-zod",
+  "name": "zod-prisma-gen",
   "version": "0.1.0",
   "description": "A simple Prisma generator that creates Zod validation schemas",
   "main": "dist/generator.js",
+  "types": "dist/generator.d.ts",
   "bin": {
-    "prisma-to-zod": "./dist/bin.js"
+    "zod-prisma-gen": "dist/bin.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "npx prisma generate --schema=./test/schema.prisma"
+    "test": "npx prisma generate --schema=./test/schema.prisma",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "prisma",
     "zod",
     "generator",
     "validation",
-    "schema"
+    "schema",
+    "typescript"
   ],
   "license": "MIT",
   "dependencies": {
