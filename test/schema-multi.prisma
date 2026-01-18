@@ -1,0 +1,28 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider      = "node ./dist/bin.js"
+  output        = "./generated/zod-multi"
+  multipleFiles = "true"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String?
+  role  Role   @default(USER)
+}
+
+model Post {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String?
+}

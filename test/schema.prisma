@@ -1,0 +1,64 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider   = "node ./dist/bin.js"
+  output     = "./generated/zod"
+}
+
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  age       Int?
+  score     Float    @default(0.0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  profile   Profile?
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
+  title     String
+  content   String?
+  status    PostStatus @default(DRAFT)
+  views     Int        @default(0)
+  tags      String[]
+  metadata  Json?
+  author    User       @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime   @default(now())
+}
+
+model Profile {
+  id       Int     @id @default(autoincrement())
+  bio      String?
+  avatar   Bytes?
+  user     User    @relation(fields: [userId], references: [id])
+  userId   Int     @unique
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Decimal
+  quantity    BigInt   @default(0)
+  description String?
+}
