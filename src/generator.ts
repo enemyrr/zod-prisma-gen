@@ -3,7 +3,11 @@ import { mkdir, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { parseConfig } from './config';
 import { generateEnumSchema } from './generators/enum';
-import { generateModelSchema } from './generators/model';
+import {
+  generateModelSchema,
+  generateCreateInputSchema,
+  generateUpdateInputSchema,
+} from './generators/model';
 
 export function onManifest(): GeneratorManifest {
   return {
@@ -43,6 +47,13 @@ async function generateSingleFile(
   for (const model of datamodel.models) {
     lines.push(generateModelSchema(model, config.coerceDate, enumNames));
     lines.push('');
+
+    if (config.createInputTypes) {
+      lines.push(generateCreateInputSchema(model, config.coerceDate, enumNames));
+      lines.push('');
+      lines.push(generateUpdateInputSchema(model, config.coerceDate, enumNames));
+      lines.push('');
+    }
   }
 
   const content = lines.join('\n');
@@ -83,7 +94,14 @@ async function generateMultipleFiles(
       imports.push(`import { ${enumName}Schema } from './${enumName}';`);
     }
 
-    const content = `${imports.join('\n')}\n\n${generateModelSchema(model, config.coerceDate, enumNames)}\n`;
+    const schemas = [generateModelSchema(model, config.coerceDate, enumNames)];
+
+    if (config.createInputTypes) {
+      schemas.push(generateCreateInputSchema(model, config.coerceDate, enumNames));
+      schemas.push(generateUpdateInputSchema(model, config.coerceDate, enumNames));
+    }
+
+    const content = `${imports.join('\n')}\n\n${schemas.join('\n\n')}\n`;
     const fileName = `${model.name}.ts`;
     await writeFile(join(config.output, fileName), content);
     exports.push(`export * from './${model.name}';`);
