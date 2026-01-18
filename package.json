@@ -1,6 +1,6 @@
 {
   "name": "zod-prisma-gen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple Prisma generator that creates Zod validation schemas",
   "main": "dist/generator.js",
   "types": "dist/generator.d.ts",
